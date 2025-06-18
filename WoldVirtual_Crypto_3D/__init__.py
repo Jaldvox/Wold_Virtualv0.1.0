@@ -1,0 +1,1 @@
+"""Módulo principal de WoldVirtual_Crypto_3D.""" 

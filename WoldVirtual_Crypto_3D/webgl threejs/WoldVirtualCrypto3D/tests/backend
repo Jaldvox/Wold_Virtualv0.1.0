@@ -1,0 +1,99 @@
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/__init__.py
+# This file is intentionally left blank.
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_app.py
+import unittest
+from src.backend.app import app
+
+class TestApp(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
+
+    def test_home_page(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'API del Metaverso Cripto 3D lista.', response.data)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_state.py
+import unittest
+from src.backend.state.MetaverseState import MetaverseState
+
+class TestMetaverseState(unittest.TestCase):
+    def setUp(self):
+        self.state = MetaverseState()
+
+    def test_initial_state(self):
+        self.assertIsNotNone(self.state)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_user.py
+import unittest
+from src.backend.state.UserState import UserState
+
+class TestUserState(unittest.TestCase):
+    def setUp(self):
+        self.user_state = UserState()
+
+    def test_initial_user_state(self):
+        self.assertIsNotNone(self.user_state)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_scene.py
+import unittest
+from src.backend.state.SceneState import SceneState
+
+class TestSceneState(unittest.TestCase):
+    def setUp(self):
+        self.scene_state = SceneState()
+
+    def test_initial_scene_state(self):
+        self.assertIsNotNone(self.scene_state)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_blockchain.py
+import unittest
+from src.backend.state.BlockchainState import BlockchainState
+
+class TestBlockchainState(unittest.TestCase):
+    def setUp(self):
+        self.blockchain_state = BlockchainState()
+
+    def test_initial_blockchain_state(self):
+        self.assertIsNotNone(self.blockchain_state)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_api.py
+import unittest
+from src.backend.api.scene import api as scene_api
+
+class TestSceneAPI(unittest.TestCase):
+    def setUp(self):
+        self.api = scene_api
+
+    def test_scene_api(self):
+        self.assertIsNotNone(self.api)
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_database.py
+import unittest
+from src.backend.database.database import Database
+
+class TestDatabase(unittest.TestCase):
+    def setUp(self):
+        self.database = Database()
+
+    def test_database_connection(self):
+        self.assertTrue(self.database.connect())
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_utils.py
+import unittest
+from src.backend.utils.validators import validate_user
+
+class TestUtils(unittest.TestCase):
+    def test_validate_user(self):
+        self.assertTrue(validate_user("test_user"))
+
+# File: /metaverse-crypto-3d/metaverse-crypto-3d/tests/backend/test_encryption.py
+import unittest
+from src.backend.utils.encryption import encrypt_data
+
+class TestEncryption(unittest.TestCase):
+    def test_encrypt_data(self):
+        encrypted = encrypt_data("test_data")
+        self.assertIsNotNone(encrypted)
