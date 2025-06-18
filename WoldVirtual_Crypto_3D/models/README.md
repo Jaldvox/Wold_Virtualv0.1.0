@@ -1,173 +1,302 @@
 # Modelos de WoldVirtual Crypto 3D
 
-Este directorio contiene los modelos de datos principales del metaverso WoldVirtual Crypto 3D.
+Este directorio contiene los modelos de datos principales del metaverso WoldVirtual Crypto 3D, refactorizados para mayor eficiencia, consistencia y mejores prácticas.
 
 ## Estructura del Directorio
 
 ```
 models/
-├── user.py          # Modelo de usuario
-├── asset.py         # Modelo de activo digital
-├── scene.py         # Modelo de escena 3D
-└── transaction.py   # Modelo de transacción
+├── user.py          # Modelo de usuario con gestión de wallet y reputación
+├── asset.py         # Modelo de activo digital (NFT) con metadatos completos
+├── scene.py         # Modelo de escena 3D con gestión de contenido
+└── transaction.py   # Modelo de transacción blockchain con estados completos
 ```
+
+## Mejoras Implementadas
+
+### 🔧 Refactorización General
+- **Enums tipados**: Uso de `Enum` para tipos y estados
+- **Validación de datos**: Validación automática en `__init__`
+- **Campos por defecto**: Uso de `field(default_factory=...)` para objetos mutables
+- **Timestamps UTC**: Uso consistente de `datetime.utcnow()`
+- **Índices de base de datos**: Optimización de consultas
+- **Tipado mejorado**: Anotaciones de tipo completas
+- **Documentación**: Docstrings detallados para todos los métodos
+
+### 📊 Métricas y Analytics
+- **Scores de popularidad**: Cálculo automático basado en métricas
+- **Tiempo de confirmación**: Tracking de transacciones blockchain
+- **Complejidad de escenas**: Score basado en assets y objetos
+- **Actividad de usuarios**: Tracking de engagement
 
 ## Modelos Principales
 
 ### 1. Usuario (`user.py`)
-- Información básica del usuario
-- Credenciales y autenticación
-- Preferencias y configuración
-- Inventario y posesiones
-- Estadísticas y reputación
+Modelo completo de usuario con gestión de wallet, reputación y actividad.
 
-#### Atributos Principales
-- `username`: Nombre de usuario único
-- `email`: Correo electrónico
-- `wallet_address`: Dirección de wallet
-- `created_at`: Fecha de creación
-- `is_active`: Estado de la cuenta
-- `is_verified`: Estado de verificación
-- `avatar_url`: URL del avatar
-- `theme`: Preferencia de tema
-- `language`: Idioma preferido
-- `owned_assets`: Lista de activos poseídos
-- `created_scenes`: Lista de escenas creadas
-- `total_transactions`: Total de transacciones
-- `reputation_score`: Puntuación de reputación
+#### Características Principales
+- **Gestión de wallet**: Verificación y conexión de wallets
+- **Sistema de reputación**: Score ponderado con suavizado
+- **Inventario dinámico**: Assets y escenas poseídas/creadas
+- **Configuración de privacidad**: Control granular de visibilidad
+- **Métricas financieras**: Tracking de ganancias y gastos
+- **Actividad temporal**: Timestamps de login y actividad
+
+#### Atributos Clave
+```python
+# Información básica
+username: str                    # Nombre único
+email: str                       # Email válido
+wallet_address: str              # Dirección Ethereum
+
+# Estado y actividad
+is_active: bool                  # Estado de la cuenta
+is_verified: bool                # Verificación de wallet
+is_premium: bool                 # Estado premium
+last_login: datetime             # Último acceso
+
+# Inventario
+owned_assets: List[str]          # Assets poseídos
+created_scenes: List[str]        # Escenas creadas
+favorite_scenes: List[str]       # Escenas favoritas
+
+# Métricas
+reputation_score: float          # Score de reputación
+total_earnings: float            # Ganancias totales
+total_spent: float               # Gastos totales
+```
+
+#### Métodos Principales
+- `verify_wallet()`: Verificación criptográfica
+- `update_reputation()`: Actualización de reputación
+- `add_earnings()/add_expense()`: Tracking financiero
+- `get_public_profile()`: Perfil público
+- `is_new_user`/`has_activity`: Properties de estado
 
 ### 2. Activo Digital (`asset.py`)
-- Metadatos del activo
-- Propiedades 3D
-- Información de blockchain
-- Historial de propiedad
+Modelo completo de NFT con gestión de metadatos, mercado y blockchain.
 
-#### Atributos Principales
-- `name`: Nombre del activo
-- `description`: Descripción detallada
-- `type`: Tipo de activo
-- `format`: Formato del archivo
-- `file_url`: URL del archivo
-- `thumbnail_url`: URL de la miniatura
-- `price`: Precio en tokens
-- `owner`: Propietario actual
-- `creator`: Creador original
-- `created_at`: Fecha de creación
-- `updated_at`: Fecha de actualización
-- `token_id`: ID del token NFT
-- `contract_address`: Dirección del contrato
-- `properties`: Propiedades personalizadas
-- `tags`: Etiquetas de categorización
+#### Características Principales
+- **Tipos de activos**: Enum con categorías específicas
+- **Estados de publicación**: Draft, Published, Archived, Deleted
+- **Información técnica**: Dimensiones, polígonos, formatos
+- **Sistema de licencias**: Tipos de licencia comercial/personal
+- **Regalías automáticas**: Porcentaje configurable
+- **Metadatos NFT**: Compatible con estándares OpenSea
+
+#### Enums Definidos
+```python
+class AssetType(str, Enum):
+    MODEL_3D = "3d_model"
+    TEXTURE = "texture"
+    SOUND = "sound"
+    ANIMATION = "animation"
+    SCENE = "scene"
+    CHARACTER = "character"
+    VEHICLE = "vehicle"
+    BUILDING = "building"
+    NATURE = "nature"
+    EFFECT = "effect"
+
+class AssetStatus(str, Enum):
+    DRAFT = "draft"
+    PUBLISHED = "published"
+    ARCHIVED = "archived"
+    DELETED = "deleted"
+```
+
+#### Métodos Principales
+- `publish()/archive()/delete()`: Gestión de estados
+- `set_technical_info()`: Información técnica
+- `transfer_ownership()`: Transferencia de propiedad
+- `get_nft_metadata()`: Metadatos para blockchain
+- `popularity_score`: Score de popularidad
 
 ### 3. Escena 3D (`scene.py`)
-- Configuración de la escena
-- Elementos 3D
-- Interactividad
-- Permisos y acceso
+Modelo avanzado de escena con gestión de contenido, acceso y rendimiento.
 
-#### Atributos Principales
-- `name`: Nombre de la escena
-- `description`: Descripción detallada
-- `creator`: Creador de la escena
-- `created_at`: Fecha de creación
-- `updated_at`: Fecha de actualización
-- `is_public`: Visibilidad pública
-- `thumbnail_url`: URL de la miniatura
-- `scene_data`: Datos de la escena
-- `assets`: Activos utilizados
-- `settings`: Configuración de la escena
-- `permissions`: Permisos de acceso
-- `tags`: Etiquetas de categorización
-- `views`: Número de visitas
-- `likes`: Número de me gusta
+#### Características Principales
+- **Tipos de escena**: Game, Experience, Gallery, Meeting, Event
+- **Control de acceso**: Public, Private, Whitelist, Token-gated
+- **Gestión de assets**: Transformaciones y posicionamiento
+- **Métricas de rendimiento**: Complejidad y optimización
+- **Tiempo de juego**: Tracking de engagement
+- **Configuración de red**: Máximo de jugadores simultáneos
+
+#### Enums Definidos
+```python
+class SceneType(str, Enum):
+    GAME = "game"
+    EXPERIENCE = "experience"
+    GALLERY = "gallery"
+    MEETING = "meeting"
+    EVENT = "event"
+    SHOWROOM = "showroom"
+
+class SceneStatus(str, Enum):
+    DRAFT = "draft"
+    PUBLISHED = "published"
+    ARCHIVED = "archived"
+    DELETED = "deleted"
+```
+
+#### Métodos Principales
+- `add_asset()/remove_asset()`: Gestión de contenido
+- `update_asset_transform()`: Posicionamiento dinámico
+- `check_access_permission()`: Control de acceso
+- `calculate_complexity_score()`: Score de complejidad
+- `get_scene_data()`: Datos para renderizado
+- `average_playtime`: Tiempo promedio de juego
 
 ### 4. Transacción (`transaction.py`)
-- Registro de transacciones
-- Información de blockchain
-- Estado y confirmación
-- Historial de cambios
+Modelo completo de transacción blockchain con gestión de estados y fees.
 
-#### Atributos Principales
-- `transaction_hash`: Hash de la transacción
-- `type`: Tipo de transacción
-- `from_address`: Dirección de origen
-- `to_address`: Dirección de destino
-- `amount`: Cantidad de tokens
-- `asset_id`: ID del activo (si aplica)
-- `scene_id`: ID de la escena (si aplica)
-- `status`: Estado de la transacción
-- `created_at`: Fecha de creación
-- `confirmed_at`: Fecha de confirmación
-- `block_number`: Número de bloque
-- `gas_used`: Gas utilizado
-- `gas_price`: Precio del gas
-- `metadata`: Metadatos adicionales
+#### Características Principales
+- **Tipos de transacción**: Purchase, Sale, Transfer, Mint, Burn, Bid
+- **Estados completos**: Pending, Confirmed, Failed, Cancelled, Expired
+- **Información de gas**: Tracking de costos de transacción
+- **Fees automáticos**: Platform fees y creator royalties
+- **Metadatos blockchain**: Información completa de red
+- **Timestamps específicos**: Confirmación y fallo
 
-## Relaciones entre Modelos
+#### Enums Definidos
+```python
+class TransactionType(str, Enum):
+    PURCHASE = "purchase"
+    SALE = "sale"
+    TRANSFER = "transfer"
+    MINT = "mint"
+    BURN = "burn"
+    BID = "bid"
+    ACCEPT_BID = "accept_bid"
+    ROYALTY = "royalty"
+    REFUND = "refund"
 
-1. **Usuario - Activo**
-   - Un usuario puede poseer múltiples activos
-   - Un activo pertenece a un usuario
-   - Relación muchos a uno
+class TransactionStatus(str, Enum):
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+    EXPIRED = "expired"
+```
 
-2. **Usuario - Escena**
-   - Un usuario puede crear múltiples escenas
-   - Una escena pertenece a un usuario
-   - Relación muchos a uno
+#### Métodos Principales
+- `confirm_transaction()`: Confirmación con datos de bloque
+- `fail_transaction()/cancel_transaction()`: Gestión de errores
+- `set_fees()`: Configuración de comisiones
+- `calculate_total_amount()`: Monto total con fees
+- `get_blockchain_info()`: Información de blockchain
+- `confirmation_time`: Tiempo de confirmación
 
-3. **Escena - Activo**
-   - Una escena puede contener múltiples activos
-   - Un activo puede ser usado en múltiples escenas
-   - Relación muchos a muchos
+## Relaciones y Validaciones
 
-4. **Transacción - Usuario**
-   - Un usuario puede tener múltiples transacciones
-   - Una transacción involucra a dos usuarios
-   - Relación muchos a muchos
+### 🔗 Relaciones entre Modelos
+1. **Usuario ↔ Activo**: Propiedad y creación
+2. **Usuario ↔ Escena**: Creación y favoritos
+3. **Escena ↔ Activo**: Contenido y assets
+4. **Transacción**: Conecta todos los modelos
 
-## Validaciones
+### ✅ Validaciones Implementadas
+- **Datos requeridos**: Validación de campos obligatorios
+- **Formato de wallet**: Direcciones Ethereum válidas
+- **Precios positivos**: Validación de montos
+- **Estados válidos**: Transiciones de estado permitidas
+- **Relaciones únicas**: Prevención de duplicados
 
-1. **Usuario**
-   - Username único
-   - Email válido
-   - Wallet address válida
-   - Contraseña segura
+## Optimizaciones de Base de Datos
 
-2. **Activo**
-   - Nombre único
-   - Formato de archivo válido
-   - Precio positivo
-   - Token ID único
+### 📈 Índices Configurados
+```python
+# Usuario
+indexes = [
+    ("username",),
+    ("email",),
+    ("wallet_address",),
+    ("is_active",),
+    ("reputation_score",)
+]
 
-3. **Escena**
-   - Nombre único por usuario
-   - Configuración válida
-   - Permisos válidos
+# Activo
+indexes = [
+    ("creator_id",),
+    ("asset_type",),
+    ("status",),
+    ("is_public",),
+    ("is_for_sale",),
+    ("price",),
+    ("created_at",),
+    ("views",)
+]
 
-4. **Transacción**
-   - Hash único
-   - Direcciones válidas
-   - Monto positivo
-   - Estado válido
+# Escena
+indexes = [
+    ("creator_id",),
+    ("scene_type",),
+    ("status",),
+    ("is_public",),
+    ("is_for_sale",),
+    ("access_type",),
+    ("created_at",),
+    ("views",),
+    ("complexity_score",)
+]
 
-## Métodos Comunes
+# Transacción
+indexes = [
+    ("transaction_hash",),
+    ("sender_id",),
+    ("receiver_id",),
+    ("transaction_type",),
+    ("status",),
+    ("created_at",),
+    ("asset_id",),
+    ("scene_id",),
+    ("block_number",)
+]
+```
 
-1. **Creación**
-   - Validación de datos
-   - Generación de IDs
-   - Registro de timestamps
+## Métodos de Utilidad
 
-2. **Actualización**
-   - Validación de cambios
-   - Registro de modificaciones
-   - Notificaciones
+### 📊 Métricas y Analytics
+- **Popularity Score**: Cálculo basado en vistas, likes, descargas
+- **Complexity Score**: Basado en assets, objetos y dimensiones
+- **Confirmation Time**: Tiempo de confirmación de transacciones
+- **Average Playtime**: Tiempo promedio de juego por escena
 
-3. **Eliminación**
-   - Verificación de permisos
-   - Limpieza de relaciones
-   - Registro de eliminación
+### 🔍 Búsqueda y Filtrado
+- **Tags normalizados**: Conversión a minúsculas
+- **Categorías**: Organización jerárquica
+- **Estados**: Filtrado por estado de publicación
+- **Tipos**: Filtrado por tipo de contenido
 
-4. **Búsqueda**
-   - Filtrado por atributos
-   - Ordenamiento
-   - Paginación 
+### 📱 APIs Públicas
+- `get_public_profile()`: Perfil público de usuario
+- `get_public_info()`: Información pública de activo/escena
+- `get_transaction_summary()`: Resumen de transacción
+- `get_nft_metadata()`: Metadatos para blockchain
+
+## Buenas Prácticas Implementadas
+
+### 🛡️ Seguridad
+- Validación de datos en `__init__`
+- Verificación de permisos de acceso
+- Sanitización de inputs
+- Control de estados de transacción
+
+### ⚡ Rendimiento
+- Índices optimizados para consultas frecuentes
+- Cálculo lazy de métricas complejas
+- Uso de properties para cálculos dinámicos
+- Timestamps UTC para consistencia
+
+### 🔧 Mantenibilidad
+- Enums para tipos y estados
+- Métodos con responsabilidad única
+- Documentación completa
+- Validaciones centralizadas
+
+### 📈 Escalabilidad
+- Diseño para alta concurrencia
+- Separación de metadatos
+- Configuración flexible
+- Extensibilidad de tipos 
