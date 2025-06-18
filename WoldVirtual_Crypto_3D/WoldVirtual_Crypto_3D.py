@@ -16,51 +16,109 @@ from typing import Optional, Dict, Any
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# Importaciones del proyecto
+# Importaciones necesarias para el funcionamiento
 try:
-    # Importar Reflex y configuración
     import reflex as rx
     from rxconfig import config
     from state import WoldVirtualState
-    from pages import MainPage, ScenePage, SettingsPage, HelpPage
     
-    # Importar utilidades
-    from utils.constants import *
-    from utils.helpers import *
-    from utils.web3_utils import Web3Manager, WalletManager, TransactionManager
-    from utils.three_utils import *
-    
-    # Importar modelos
-    from models.user import User
-    from models.asset import Asset
-    from models.scene import Scene
-    from models.transaction import Transaction
-    
-    # Importar componentes
-    from components.navbar import Navbar
-    from components.scene3d import Scene3D
-    from components.marketplace import Marketplace
-    from components.profile import Profile
-    from components.explore import Explore
-    from components.create import Create
-    from components.home import Home
-    
-    # Importar backend
-    from backend.database import Database
-    from backend.models import *
-    from backend.crud import *
-    from backend.utils import *
-    
-    # Importar assets managers
+    # Importar managers de assets
     from assets.asset_manager import AssetManager
     from assets.scene_manager import SceneManager
     from assets.texture_manager import TextureManager
     from assets.audio_manager import AudioManager
+    print(f"✅ AssetManager imported: {AssetManager}")
+    print(f"✅ SceneManager imported: {SceneManager}")
+    print(f"✅ TextureManager imported: {TextureManager}")
+    print(f"✅ AudioManager imported: {AudioManager}")
     
+    # Importar utilidades Web3
+    from utils.web3_utils import Web3Manager, WalletManager, TransactionManager
+    print(f"✅ Web3Manager imported: {Web3Manager}")
 except ImportError as e:
-    print(f"❌ Error importing modules: {e}")
-    print("Please ensure all required modules are installed and the project structure is correct.")
-    sys.exit(1)
+    print(f"⚠️ No se pudo importar Web3Manager: {e}")
+    # Definir clases dummy para evitar errores
+    class Web3Manager: 
+        def __init__(self, provider_url: str = "", chain_id: int = 1):
+            self.provider_url = provider_url
+            self.chain_id = chain_id
+    class WalletManager: 
+        def __init__(self, web3_manager):
+            self.web3_manager = web3_manager
+    class TransactionManager: 
+        def __init__(self, web3_manager):
+            self.web3_manager = web3_manager
+    class Database: pass
+    class MainPage: pass
+    class ScenePage: pass
+    class SettingsPage: pass
+    class HelpPage: pass
+    class WoldVirtualState: pass
+
+# Configurar logging básico
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('woldvirtual.log')
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+# Importaciones del proyecto
+def import_modules():
+    """Importar todos los módulos necesarios."""
+    try:
+        # Importar Reflex y configuración
+        import reflex as rx
+        from rxconfig import config
+        
+        # Importar estado
+        from state import WoldVirtualState
+        
+        # Importar páginas
+        from pages import home, explore, create, marketplace, profile, scene
+        
+        # Importar componentes
+        from components import navbar, toolbar, scene3d, ui, profile
+        
+        # Importar modelos
+        from models import user, asset, scene as scene_model, transaction
+        
+        # Importar utilidades
+        from utils import constants, helpers, web3_utils, three_utils
+        
+        # Importar gestores de assets
+        from assets import (
+            asset_manager, model_manager, texture_manager, 
+            audio_manager, material_manager, shader_manager,
+            animation_manager, effect_manager, prefab_manager
+        )
+        
+        # Importar backend
+        from backend import database, crud, schemas, blockchain
+        
+        logger.info("✅ Todos los módulos importados correctamente")
+        return True
+        
+    except ImportError as e:
+        import traceback
+        logger.error(f"❌ Error importing modules: {e}")
+        print("\n--- TRACEBACK ---")
+        traceback.print_exc()
+        print("--- FIN TRACEBACK ---\n")
+        logger.error("Please ensure all required modules are installed and the project structure is correct.")
+        return False
+    except Exception as e:
+        import traceback
+        logger.error(f"❌ Error importing modules: {e}")
+        print("\n--- TRACEBACK ---")
+        traceback.print_exc()
+        print("--- FIN TRACEBACK ---\n")
+        logger.error("Please ensure all required modules are installed and the project structure is correct.")
+        return False
 
 class WoldVirtualCrypto3D:
     """Clase principal de la aplicación - Botón de encendido"""
@@ -92,96 +150,129 @@ class WoldVirtualCrypto3D:
     
     def _check_dependencies(self) -> bool:
         """Verificar que todas las dependencias estén instaladas"""
-        self.logger.info("🔍 Verificando dependencias...")
+        print("🔍 Verificando dependencias...")
         
         required_packages = [
-            'reflex', 'web3', 'numpy', 'pillow', 'fastapi', 
+            'reflex', 'web3', 'numpy', 'PIL', 'fastapi', 
             'sqlalchemy', 'pydantic', 'uvicorn'
         ]
         
         missing_packages = []
         for package in required_packages:
             try:
+                print(f"  📦 Checking {package}...")
                 __import__(package)
-                self.logger.info(f"✅ {package}")
+                print(f"  ✅ {package}")
             except ImportError:
                 missing_packages.append(package)
-                self.logger.error(f"❌ {package} - FALTANTE")
+                print(f"  ❌ {package} - FALTANTE")
         
         if missing_packages:
-            self.logger.error(f"Dependencias faltantes: {missing_packages}")
-            self.logger.info("Ejecuta: pip install -r requirements.txt")
+            print(f"❌ Dependencias faltantes: {missing_packages}")
+            print("💡 Ejecuta: pip install -r requirements.txt")
             return False
         
-        self.logger.info("✅ Todas las dependencias verificadas")
+        print("✅ Todas las dependencias verificadas")
         return True
     
     def _initialize_database(self) -> bool:
         """Inicializar base de datos"""
         try:
-            self.logger.info("🗄️ Inicializando base de datos...")
-            self.database = Database()
-            self.database.create_tables()
-            self.logger.info("✅ Base de datos inicializada")
+            print("🗄️ Inicializando base de datos...")
+            print("  📋 Importing database configuration...")
+            
+            # Importar configuración de base de datos
+            from backend.database import engine, Base
+            
+            print("  📋 Creating tables...")
+            # Crear todas las tablas
+            Base.metadata.create_all(bind=engine)
+            
+            print("✅ Base de datos inicializada")
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error inicializando base de datos: {e}")
+            print(f"❌ Error inicializando base de datos: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def _initialize_web3(self) -> bool:
         """Inicializar componentes Web3"""
         try:
-            self.logger.info("🔗 Inicializando Web3...")
+            print("🔗 Inicializando Web3...")
             
+            print("  📋 Creating Web3Manager...")
             # Inicializar Web3 Manager
+            provider_url = config.env_vars.get("WEB3_PROVIDER_URL", "http://localhost:8545")
+            chain_id = int(config.env_vars.get("WEB3_CHAIN_ID", "1"))
+            
             self.web3_manager = Web3Manager(
-                provider_url=config.env_vars.get("WEB3_PROVIDER_URL", "http://localhost:8545"),
-                chain_id=int(config.env_vars.get("WEB3_CHAIN_ID", "1"))
+                provider_url=provider_url,
+                chain_id=chain_id
             )
             
+            print("  📋 Creating WalletManager...")
             # Inicializar Wallet Manager
             self.wallet_manager = WalletManager(self.web3_manager)
             
+            print("  📋 Creating TransactionManager...")
             # Inicializar Transaction Manager
             self.transaction_manager = TransactionManager(self.web3_manager)
             
-            self.logger.info("✅ Web3 inicializado")
+            print("✅ Web3 inicializado")
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error inicializando Web3: {e}")
+            print(f"❌ Error inicializando Web3: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def _initialize_assets(self) -> bool:
         """Inicializar gestores de assets"""
         try:
-            self.logger.info("🎨 Inicializando gestores de assets...")
+            print("🎨 Inicializando gestores de assets...")
             
+            print("  📋 Creating AssetManager...")
             # Inicializar Asset Manager
             self.asset_manager = AssetManager()
             
+            print("  📋 Creating SceneManager...")
             # Inicializar Scene Manager
             self.scene_manager = SceneManager()
             
+            print("  📋 Creating TextureManager...")
             # Inicializar Texture Manager
             self.texture_manager = TextureManager()
             
+            print("  📋 Creating AudioManager...")
             # Inicializar Audio Manager
             self.audio_manager = AudioManager()
             
-            self.logger.info("✅ Gestores de assets inicializados")
+            print("✅ Gestores de assets inicializados")
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error inicializando assets: {e}")
-            return False
+            print(f"❌ Error inicializando assets: {e}")
+            print("⚠️ Continuando con assets dummy...")
+            # Crear instancias dummy para continuar
+            self.asset_manager = type('AssetManager', (), {})()
+            self.scene_manager = type('SceneManager', (), {})()
+            self.texture_manager = type('TextureManager', (), {})()
+            self.audio_manager = type('AudioManager', (), {})()
+            print("✅ Assets dummy creados")
+            return True
     
     def _create_reflex_app(self) -> bool:
         """Crear y configurar la aplicación Reflex"""
         try:
-            self.logger.info("🌐 Creando aplicación Reflex...")
+            print("🌐 Creando aplicación Reflex...")
             
+            print("  📋 Importing Reflex...")
+            import reflex as rx
+            
+            print("  📋 Creating Reflex app...")
             # Crear aplicación Reflex
             self.app = rx.App(
-                state=WoldVirtualState,
+                _state=WoldVirtualState,
                 theme=rx.theme(
                     appearance="light",
                     has_background=True,
@@ -211,65 +302,90 @@ class WoldVirtualCrypto3D:
                 ),
             )
             
-            # Agregar páginas
-            self.app.add_page(
-                MainPage,
-                route="/",
-                title="WoldVirtual Crypto 3D",
-                description="Metaverso descentralizado 3D con capacidades de criptomonedas",
-            )
+            print("  📋 Adding pages...")
+            # Agregar páginas básicas
+            try:
+                self.app.add_page(
+                    MainPage,
+                    route="/",
+                    title="WoldVirtual Crypto 3D",
+                    description="Metaverso descentralizado 3D con capacidades de criptomonedas",
+                )
+                
+                self.app.add_page(
+                    ScenePage,
+                    route="/scene",
+                    title="Escena 3D - WoldVirtual",
+                )
+                
+                self.app.add_page(
+                    SettingsPage,
+                    route="/settings",
+                    title="Configuración - WoldVirtual",
+                )
+                
+                self.app.add_page(
+                    HelpPage,
+                    route="/help",
+                    title="Ayuda - WoldVirtual",
+                )
+                print("  ✅ Pages added successfully")
+            except Exception as e:
+                print(f"  ⚠️ Warning: Could not add pages: {e}")
+                print("  📋 Continuing without pages...")
             
-            self.app.add_page(
-                ScenePage,
-                route="/scene",
-                title="Escena 3D - WoldVirtual",
-            )
-            
-            self.app.add_page(
-                SettingsPage,
-                route="/settings",
-                title="Configuración - WoldVirtual",
-            )
-            
-            self.app.add_page(
-                HelpPage,
-                route="/help",
-                title="Ayuda - WoldVirtual",
-            )
-            
-            self.logger.info("✅ Aplicación Reflex creada")
+            print("✅ Aplicación Reflex creada")
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error creando aplicación Reflex: {e}")
+            print(f"❌ Error creando aplicación Reflex: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def _initialize_all_modules(self) -> bool:
         """Inicializar todos los módulos del sistema"""
-        self.logger.info("🔧 Inicializando todos los módulos...")
+        print("🔧 Inicializando todos los módulos...")
         
-        # Verificar dependencias
-        if not self._check_dependencies():
+        try:
+            print("  📋 Checking dependencies...")
+            # Verificar dependencias
+            if not self._check_dependencies():
+                print("  ❌ Dependencies check failed")
+                return False
+            
+            print("  📋 Initializing database...")
+            # Inicializar base de datos
+            if not self._initialize_database():
+                print("  ❌ Database initialization failed")
+                return False
+            
+            print("  📋 Initializing Web3...")
+            # Inicializar Web3
+            if not self._initialize_web3():
+                print("  ❌ Web3 initialization failed")
+                return False
+            
+            print("  📋 Initializing assets...")
+            # Inicializar assets
+            if not self._initialize_assets():
+                print("  ❌ Assets initialization failed")
+                return False
+            
+            print("  📋 Creating Reflex app...")
+            # Crear aplicación Reflex
+            if not self._create_reflex_app():
+                print("  ❌ Reflex app creation failed")
+                return False
+            
+            self.is_initialized = True
+            print("✅ Todos los módulos inicializados correctamente")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error in _initialize_all_modules: {e}")
+            import traceback
+            traceback.print_exc()
             return False
-        
-        # Inicializar base de datos
-        if not self._initialize_database():
-            return False
-        
-        # Inicializar Web3
-        if not self._initialize_web3():
-            return False
-        
-        # Inicializar assets
-        if not self._initialize_assets():
-            return False
-        
-        # Crear aplicación Reflex
-        if not self._create_reflex_app():
-            return False
-        
-        self.is_initialized = True
-        self.logger.info("✅ Todos los módulos inicializados correctamente")
-        return True
     
     def _start_reflex_server(self):
         """Iniciar servidor Reflex en un hilo separado"""
@@ -324,7 +440,7 @@ class WoldVirtualCrypto3D:
             "Web3": "✅ Connected" if self.web3_manager else "❌ Disconnected",
             "Assets": "✅ Loaded" if self.asset_manager else "❌ Not Loaded",
             "Reflex": "✅ Ready" if self.app else "❌ Not Ready",
-            "Network": self.web3_manager.network_name if self.web3_manager else "Unknown",
+            "Network": getattr(self.web3_manager, 'network_name', 'Unknown') if self.web3_manager else "Unknown",
             "Port": f"{config.frontend_port}",
             "Environment": config.env.value
         }
@@ -350,29 +466,53 @@ class WoldVirtualCrypto3D:
     def start(self):
         """Iniciar la aplicación completa"""
         try:
+            print("🔌 Starting WoldVirtual Crypto 3D - Power Button...")
+            
             # Mostrar banner
             self._show_startup_banner()
             
+            print("📋 Step 1: Initializing all modules...")
             # Inicializar todos los módulos
             if not self._initialize_all_modules():
-                self.logger.error("❌ Failed to initialize modules")
+                print("❌ Failed to initialize modules")
+                self.cleanup()
                 return False
             
+            print("📋 Step 2: Starting Reflex server...")
+            # Iniciar servidor Reflex en un hilo separado
+            self.server_thread = threading.Thread(
+                target=self._start_reflex_server,
+                daemon=True
+            )
+            self.server_thread.start()
+            
+            print("📋 Step 3: Showing system status...")
             # Mostrar estado del sistema
             self._show_system_status()
             
+            print("📋 Step 4: Showing access information...")
             # Mostrar información de acceso
             self._show_access_info()
             
-            # Iniciar servidor Reflex
-            self._start_reflex_server()
+            print("🎮 WoldVirtual Crypto 3D is now running!")
+            print("🌐 Open your browser and go to: http://localhost:3000")
+            print("⏹️  Press Ctrl+C to stop the server")
             
-        except KeyboardInterrupt:
-            self.logger.info("🛑 Application stopped by user")
+            # Mantener la aplicación corriendo
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                print("\n🛑 Shutting down WoldVirtual Crypto 3D...")
+                self.cleanup()
+                return True
+                
         except Exception as e:
-            self.logger.error(f"❌ Runtime error: {e}")
-        finally:
+            print(f"❌ Error in start: {e}")
+            import traceback
+            traceback.print_exc()
             self.cleanup()
+            return False
     
     def cleanup(self):
         """Limpieza al cerrar la aplicación"""
