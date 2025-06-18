@@ -130,6 +130,7 @@ config = rx.Config(
     
     # Configuración de Tailwind
     tailwind=TAILWIND_CONFIG,
+    plugins=[rx.plugins.TailwindV3Plugin()],
     
     # Configuración de variables de entorno
     env_vars={

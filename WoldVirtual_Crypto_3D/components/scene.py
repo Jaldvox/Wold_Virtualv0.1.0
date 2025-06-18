@@ -1,5 +1,5 @@
 import reflex as rx
-from state import State
+from state import WoldVirtualState
 
 class Scene3D(rx.Component):
     """Componente para la escena 3D."""
