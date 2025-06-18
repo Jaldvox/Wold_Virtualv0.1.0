@@ -1,7 +1,7 @@
 """Configuración de Reflex para WoldVirtual Crypto 3D."""
 import reflex as rx
 import os
-from typing import List
+from typing import Dict, List, Any
 
 # Configuración de entorno
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
@@ -34,13 +34,6 @@ CORS_ALLOWED_ORIGINS = [
 
 # Configuración de caché
 CACHE_CONTROL = "no-cache" if DEBUG_MODE else "public, max-age=3600"
-
-# Configuración de plugins
-PLUGINS = [
-    "reflex_web3",  # Plugin para integración Web3
-    "reflex_threejs",  # Plugin para Three.js
-    "reflex_auth",  # Plugin para autenticación
-]
 
 # Configuración de Tailwind CSS
 TAILWIND_CONFIG = {
@@ -105,10 +98,6 @@ TAILWIND_CONFIG = {
             },
         }
     },
-    "plugins": [
-        "reflex_web3",
-        "reflex_threejs",
-    ],
 }
 
 # Configuración principal de Reflex
@@ -141,9 +130,6 @@ config = rx.Config(
     
     # Configuración de Tailwind
     tailwind=TAILWIND_CONFIG,
-    
-    # Configuración de plugins
-    plugins=PLUGINS,
     
     # Configuración de variables de entorno
     env_vars={
@@ -233,171 +219,6 @@ config = rx.Config(
         "X-XSS-Protection": "1; mode=block",
         "Referrer-Policy": "strict-origin-when-cross-origin",
         "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-    },
-    
-    # Configuración de Web3
-    web3_config={
-        "provider_url": WEB3_PROVIDER_URL,
-        "chain_id": WEB3_CHAIN_ID,
-        "contracts": {
-            "nft": os.getenv("NFT_CONTRACT_ADDRESS", ""),
-            "marketplace": os.getenv("MARKETPLACE_CONTRACT_ADDRESS", ""),
-            "governance": os.getenv("GOVERNANCE_CONTRACT_ADDRESS", ""),
-            "staking": os.getenv("STAKING_CONTRACT_ADDRESS", ""),
-        },
-        "networks": {
-            "ethereum": {
-                "chain_id": 1,
-                "name": "Ethereum Mainnet",
-                "rpc_url": "https://mainnet.infura.io/v3/",
-                "explorer": "https://etherscan.io",
-                "currency": "ETH",
-            },
-            "polygon": {
-                "chain_id": 137,
-                "name": "Polygon Mainnet",
-                "rpc_url": "https://polygon-rpc.com",
-                "explorer": "https://polygonscan.com",
-                "currency": "MATIC",
-            },
-            "bsc": {
-                "chain_id": 56,
-                "name": "BSC Mainnet",
-                "rpc_url": "https://bsc-dataseed.binance.org",
-                "explorer": "https://bscscan.com",
-                "currency": "BNB",
-            },
-            "arbitrum": {
-                "chain_id": 42161,
-                "name": "Arbitrum One",
-                "rpc_url": "https://arb1.arbitrum.io/rpc",
-                "explorer": "https://arbiscan.io",
-                "currency": "ETH",
-            },
-            "optimism": {
-                "chain_id": 10,
-                "name": "Optimism",
-                "rpc_url": "https://mainnet.optimism.io",
-                "explorer": "https://optimistic.etherscan.io",
-                "currency": "ETH",
-            },
-        },
-    },
-    
-    # Configuración de Three.js
-    threejs_config={
-        "version": "0.158.0",
-        "cdn_url": "https://cdnjs.cloudflare.com/ajax/libs/three.js/",
-        "default_scene": {
-            "background": "#000000",
-            "fog": {
-                "color": "#000000",
-                "near": 1,
-                "far": 1000,
-            },
-            "camera": {
-                "fov": 75,
-                "near": 0.1,
-                "far": 1000,
-                "position": [0, 5, 10],
-                "look_at": [0, 0, 0],
-            },
-            "lighting": {
-                "ambient": {
-                    "color": "#ffffff",
-                    "intensity": 0.5,
-                },
-                "directional": {
-                    "color": "#ffffff",
-                    "intensity": 0.8,
-                    "position": [0, 10, 0],
-                    "cast_shadow": True,
-                },
-            },
-            "physics": {
-                "gravity": [0, -9.81, 0],
-                "world_scale": 1.0,
-                "solver_iterations": 10,
-            },
-        },
-        "asset_types": {
-            "models": [".glb", ".gltf", ".obj", ".fbx", ".dae"],
-            "textures": [".jpg", ".jpeg", ".png", ".webp", ".ktx2"],
-            "sounds": [".mp3", ".wav", ".ogg", ".m4a"],
-            "animations": [".fbx", ".dae", ".bvh"],
-            "videos": [".mp4", ".webm", ".ogg"],
-        },
-        "optimization": {
-            "lod_enabled": True,
-            "frustum_culling": True,
-            "occlusion_culling": True,
-            "texture_compression": "ktx2",
-            "model_compression": "draco",
-            "max_texture_resolution": 2048,
-            "max_polygon_count": 100000,
-        },
-    },
-    
-    # Configuración de autenticación
-    auth_config={
-        "jwt_secret": os.getenv("JWT_SECRET", "your-jwt-secret"),
-        "jwt_expiration": 24 * 60 * 60,  # 24 horas
-        "refresh_token_expiration": 7 * 24 * 60 * 60,  # 7 días
-        "max_login_attempts": 5,
-        "lockout_duration": 15 * 60,  # 15 minutos
-        "password_min_length": 8,
-        "require_special_chars": True,
-        "providers": ["email", "wallet", "oauth"],
-        "oauth_providers": {
-            "google": {
-                "client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
-                "client_secret": os.getenv("GOOGLE_CLIENT_SECRET", ""),
-            },
-            "github": {
-                "client_id": os.getenv("GITHUB_CLIENT_ID", ""),
-                "client_secret": os.getenv("GITHUB_CLIENT_SECRET", ""),
-            },
-        },
-    },
-    
-    # Configuración de notificaciones
-    notification_config={
-        "email": {
-            "enabled": True,
-            "provider": "smtp",
-            "smtp_host": os.getenv("SMTP_HOST", "localhost"),
-            "smtp_port": int(os.getenv("SMTP_PORT", "587")),
-            "smtp_user": os.getenv("SMTP_USER", ""),
-            "smtp_password": os.getenv("SMTP_PASSWORD", ""),
-        },
-        "push": {
-            "enabled": True,
-            "vapid_public_key": os.getenv("VAPID_PUBLIC_KEY", ""),
-            "vapid_private_key": os.getenv("VAPID_PRIVATE_KEY", ""),
-        },
-        "in_app": {
-            "enabled": True,
-            "max_notifications": 100,
-            "retention_days": 30,
-        },
-    },
-    
-    # Configuración de analytics
-    analytics_config={
-        "enabled": True,
-        "provider": "google_analytics",
-        "tracking_id": os.getenv("GA_TRACKING_ID", ""),
-        "privacy_mode": True,
-        "anonymize_ip": True,
-    },
-    
-    # Configuración de monitoreo de errores
-    error_monitoring_config={
-        "enabled": True,
-        "provider": "sentry",
-        "dsn": os.getenv("SENTRY_DSN", ""),
-        "environment": ENVIRONMENT,
-        "sample_rate": 1.0 if DEBUG_MODE else 0.1,
     },
 )
 
