@@ -1,9 +1,9 @@
-"""Aplicación principal de WoldVirtual Crypto 3D."""
+"""Archivo principal de WoldVirtual Crypto 3D para Reflex."""
 import reflex as rx
 from state import WoldVirtualState
 from pages import home_page, create_page, explore_page, marketplace_page, profile_page
 
-# Crear la aplicación Reflex
+# Definir la aplicación principal
 app = rx.App(
     state=WoldVirtualState,
     title="WoldVirtual Crypto 3D",
@@ -18,14 +18,14 @@ app = rx.App(
     ),
 )
 
-# Agregar rutas
+# Rutas principales
 app.add_page(home_page, route="/")
 app.add_page(create_page, route="/create")
 app.add_page(explore_page, route="/explore")
 app.add_page(marketplace_page, route="/marketplace")
 app.add_page(profile_page, route="/profile")
 
-# Configurar página de error 404
+# Página 404
 @app.add_page
 def not_found():
     return rx.box(
