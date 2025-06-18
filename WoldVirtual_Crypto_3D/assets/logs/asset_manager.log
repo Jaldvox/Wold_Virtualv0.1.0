@@ -111,3 +111,9 @@
 2025-06-19 00:23:51,386 - __main__ - INFO - \U0001f680 WoldVirtual Crypto 3D - Botón de encendido inicializado
 2025-06-19 00:23:53,452 - __main__ - INFO - \U0001f680 Iniciando servidor Reflex...
 2025-06-19 00:23:53,452 - __main__ - ERROR - \u274c Error iniciando servidor Reflex: 'App' object has no attribute 'compile'
+2025-06-19 00:26:36,632 - __main__ - INFO - \U0001f680 WoldVirtual Crypto 3D - Botón de encendido inicializado
+2025-06-19 00:26:38,688 - __main__ - INFO - \U0001f680 Iniciando servidor Reflex...
+2025-06-19 00:26:38,688 - __main__ - ERROR - \u274c Error iniciando servidor Reflex: 'App' object has no attribute 'compile'
+2025-06-19 00:27:58,783 - __main__ - INFO - \U0001f680 WoldVirtual Crypto 3D - Botón de encendido inicializado
+2025-06-19 00:28:00,774 - __main__ - INFO - \U0001f680 Iniciando servidor Reflex...
+2025-06-19 00:28:00,775 - __main__ - ERROR - \u274c Error iniciando servidor Reflex: 'App' object has no attribute 'compile'
