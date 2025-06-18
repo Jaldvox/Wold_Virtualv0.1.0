@@ -1,0 +1,1 @@
+module.exports = {basePath: "frontend", compress: true, trailingSlash: true, staticPageGenerationTimeout: 60, devIndicators: false};
