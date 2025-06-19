@@ -1,0 +1,1 @@
+"""WoldVirtual Crypto 3D - Metaverso descentralizado.""" 
