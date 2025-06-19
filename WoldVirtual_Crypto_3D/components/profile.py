@@ -1,5 +1,5 @@
 import reflex as rx
-
+ 
 class Profile(rx.Component):
     """Componente de perfil de usuario mínimo."""
     def render(self):

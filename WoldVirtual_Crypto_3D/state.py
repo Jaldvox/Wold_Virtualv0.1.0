@@ -297,7 +297,7 @@ class WoldVirtualState(rx.State):
             self.scene_loading_progress = 75.0
             self.scene_loading_progress = 100.0
             
-            self.scene_loaded = True
+        self.scene_loaded = True
             self.loading = False
             self.success_message = f"Escena '{self.current_scene_name}' cargada"
             logger.info(f"Escena cargada: {scene_id}")
@@ -309,8 +309,8 @@ class WoldVirtualState(rx.State):
     def update_camera(self, position: List[float], target: List[float]):
         """Actualiza la posición y objetivo de la cámara."""
         try:
-            self.camera_position = position
-            self.camera_target = target
+        self.camera_position = position
+        self.camera_target = target
             logger.debug(f"Cámara actualizada: pos={position}, target={target}")
         except Exception as e:
             logger.error(f"Error al actualizar cámara: {e}")

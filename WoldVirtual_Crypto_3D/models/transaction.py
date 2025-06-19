@@ -116,8 +116,8 @@ class Transaction(rx.Model):
                           gas_used: int = None, gas_price: int = None) -> bool:
         """Confirma la transacción con información del bloque."""
         if self.status == TransactionStatus.PENDING:
-            self.block_number = block_number
-            self.block_timestamp = block_timestamp
+        self.block_number = block_number
+        self.block_timestamp = block_timestamp
             self.gas_used = gas_used
             self.gas_price = gas_price
             self.status = TransactionStatus.CONFIRMED

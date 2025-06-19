@@ -502,7 +502,7 @@ class WoldVirtualCrypto3D:
             try:
                 while True:
                     time.sleep(1)
-            except KeyboardInterrupt:
+        except KeyboardInterrupt:
                 print("\n🛑 Shutting down WoldVirtual Crypto 3D...")
                 self.cleanup()
                 return True
@@ -530,7 +530,7 @@ class WoldVirtualCrypto3D:
             # Limpiar assets
             if self.asset_manager:
                 self.asset_manager.cleanup()
-            
+        
             self.logger.info("✅ Cleanup completed")
             
         except Exception as e:
