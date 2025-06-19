@@ -1,54 +1,172 @@
-# World Virtual v0.0.9-1
+# WoldVirtual Crypto 3D - Metaverso Descentralizado
 
-## Descripción General
+## 🚀 Descripción
+WoldVirtual es un metaverso cripto 3D descentralizado y de código abierto que permite a los usuarios crear, explorar y monetizar experiencias virtuales. Construido con Reflex y Three.js, ofrece una plataforma completa para la creación de mundos virtuales.
 
-World Virtual es un proyecto de mundo virtual interactivo que permite a los usuarios explorar y interactuar en un entorno digital inmersivo.
+## 🏗️ Arquitectura del Proyecto
 
-## Características
+### Estructura de Carpetas
+```
+WoldVirtual_Crypto_3D/
+├── components/          # Componentes reutilizables
+│   ├── scene.py        # Escena 3D con Three.js
+│   └── ui.py           # Componentes de interfaz
+├── assets/             # Recursos estáticos
+│   ├── models/         # Modelos 3D
+│   ├── textures/       # Texturas
+│   └── sounds/         # Audio
+├── utils/              # Utilidades
+│   ├── constants.py    # Constantes globales
+│   ├── helpers.py      # Funciones de ayuda
+│   └── web3_utils.py   # Utilidades blockchain
+└── models/             # Modelos de datos
+```
 
-- Entorno virtual 3D
-- Interacción en tiempo real
-- Sistema de navegación intuitivo
-- Soporte multiplataforma
+### Archivos Principales
+- `WoldVirtual_Crypto_3D.py`: Punto de entrada de la aplicación
+- `state.py`: Gestión del estado global
+- `styles.py`: Estilos globales
+- `rxconfig.py`: Configuración de Reflex
 
-## Instalación
+## 🛠️ Tecnologías Principales
 
+### Frontend
+- **Reflex**: Framework Python Full-Stack
+- **Three.js**: Motor 3D
+- **React Three Fiber**: Integración React con Three.js
+- **React Three Drei**: Componentes útiles para Three.js
+
+### Backend
+- **Reflex**: Manejo de estado y lógica de negocio
+- **SQLite**: Base de datos (desarrollo)
+- **Web3.py**: Integración con blockchain
+
+### Blockchain
+- **Ethereum/Polygon**: Redes soportadas
+- **Web3.js**: Interacción con smart contracts
+- **IPFS**: Almacenamiento descentralizado
+
+## 📋 Requisitos del Sistema
+
+### Desarrollo
+- Python 3.8+
+- Node.js 16+
+- WebGL 2.0 compatible
+- Git
+
+### Producción
+- Servidor con soporte WebGL
+- Base de datos PostgreSQL
+- Nodo blockchain
+- Servidor IPFS
+
+## 🚀 Instalación
+
+### 1. Clonar el Repositorio
 ```bash
-# Clonar el repositorio
-git clone [URL_DEL_REPOSITORIO]
+git clone https://github.com/tu-usuario/WoldVirtual_Crypto_3D.git
+cd WoldVirtual_Crypto_3D
+```
 
-# Navegar al directorio
-cd Wold_Virtualv0.0.9-1
+### 2. Configurar Entorno Virtual
+```bash
+# Crear entorno virtual
+python -m venv .venv
 
-# Instalar dependencias
+# Activar entorno virtual
+# Windows
+.venv\Scripts\activate
+# Unix/Mac
+source .venv/bin/activate
+```
+
+### 3. Instalar Dependencias
+```bash
+# Instalar dependencias Python
+pip install -r requirements.txt
+
+# Instalar dependencias Node.js
 npm install
 ```
 
-## Uso
-
+### 4. Configurar Variables de Entorno
 ```bash
-# Ejecutar el proyecto
-npm start
+# Copiar archivo de ejemplo
+cp .env.example .env
+
+# Editar .env con tus configuraciones
 ```
 
-## Tecnologías
+## 💻 Desarrollo
 
-- [Lista las tecnologías utilizadas]
-- [Frameworks y librerías]
-- [Herramientas de desarrollo]
+### Iniciar Servidor de Desarrollo
+```bash
+reflex run
+```
+La aplicación estará disponible en `http://localhost:3000`
 
-## Contribución
+### Estructura de Desarrollo
+- `components/`: Componentes reutilizables
+- `assets/`: Recursos estáticos
+- `utils/`: Utilidades y helpers
+- `models/`: Modelos de datos
 
-1. Fork el proyecto
-2. Crea una rama para tu característica
-3. Commit tus cambios
-4. Push a la rama
-5. Abre un Pull Request
+## 🎮 Características Principales
 
-## Licencia
+### Renderizado 3D
+- Escenas inmersivas
+- Física realista
+- Iluminación dinámica
+- Optimización de rendimiento
 
-[Especificar tipo de licencia]
+### Integración Blockchain
+- Conexión de wallets
+- NFTs para activos
+- Marketplace descentralizado
+- Gobernanza DAO
 
-## Contacto
+### Creación de Contenido
+- Editor de escenas
+- Importación de modelos
+- Sistema de terrenos
+- Creación de avatares
 
-[Información de contacto del desarrollador]
+## 📚 Documentación
+
+### Guías
+- [Guía de Desarrollo](docs/development.md)
+- [Guía de Contribución](docs/contributing.md)
+- [Guía de Despliegue](docs/deployment.md)
+
+### API
+- [API Reference](docs/api.md)
+- [Componentes](docs/components.md)
+- [Estado](docs/state.md)
+
+## 🤝 Contribuir
+
+### Proceso de Contribución
+1. Fork el repositorio
+2. Crear rama feature (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir Pull Request
+
+### Convenciones de Código
+- PEP 8 para Python
+- TypeScript para componentes
+- Documentación con docstrings
+- Tests unitarios
+
+## 📝 Licencia
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 📞 Contacto
+- Website: [woldvirtual.com](https://woldvirtual.com)
+- Discord: [Discord Server](https://discord.gg/woldvirtual)
+- Twitter: [@WoldVirtual](https://twitter.com/WoldVirtual)
+
+## 🙏 Agradecimientos
+- Reflex por el framework
+- Three.js por el motor 3D
+- La comunidad de código abierto

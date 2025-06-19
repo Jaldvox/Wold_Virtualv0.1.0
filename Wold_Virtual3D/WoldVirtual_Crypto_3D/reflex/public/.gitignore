@@ -1,0 +1,12 @@
+*.py[cod]
+.states
+*.db
+.web
+assets/external/
+__pycache__/
+.env
+node_modules/
+dist/
+.cache/
+.vscode/
+*.log
